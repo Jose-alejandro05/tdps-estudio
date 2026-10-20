@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ranking de deuda técnica — R2-B1</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:860px;margin:2rem auto;padding:0 1rem;line-height:1.5}
+table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.5rem;text-align:left}
+input[type=number]{width:4.5rem}.err{color:#b00020;font-weight:600}.box{background:#f4f4f4;padding:1rem;border-radius:6px}
+</style></head><body>
+<h1>Ranking de deuda técnica — bloque R2-B1 (repositorio R2)</h1>
+<div class="box">
+<p><b>Tarea.</b> Ordene los siguientes elementos de deuda técnica (archivos) según <b>qué tan prioritario es atenderlos en los próximos sprints</b>.
+Considere en conjunto: riesgo de fallas, costo de postergar, valor de negocio del módulo y esfuerzo de corregir.</p>
+<p>Asigne <b>1</b> al más prioritario y <b>N</b> al menos prioritario. No repita números. Puede abrir el archivo (enlace) para revisarlo.
+<b>No consulte</b> reportes de SonarQube ni ningún puntaje calculado; y no comente sus respuestas con otros evaluadores.</p></div>
+<p><label>Su código de evaluador (ej. X01): <input id="ev" size="8"></label></p>
+<table><thead><tr><th>Elemento</th><th>Archivo</th><th>Rango</th></tr></thead><tbody id="tb"></tbody></table>
+<p><button id="btn">Descargar respuestas (CSV)</button> <span id="msg" class="err"></span></p>
+<script>
+const BLOQUE="R2-B1", ITEMS=[{"item_id": "R2-011", "path": "gson/src/main/java/com/google/gson/FieldNamingStrategy.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/gson/src/main/java/com/google/gson/FieldNamingStrategy.java"}, {"item_id": "R2-008", "path": "gson/src/main/java/com/google/gson/ExclusionStrategy.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/gson/src/main/java/com/google/gson/ExclusionStrategy.java"}, {"item_id": "R2-007", "path": "extras/src/main/java/com/google/gson/typeadapters/UtcDateTypeAdapter.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/extras/src/main/java/com/google/gson/typeadapters/UtcDateTypeAdapter.java"}, {"item_id": "R2-005", "path": "extras/src/main/java/com/google/gson/typeadapters/PostConstructAdapterFactory.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/extras/src/main/java/com/google/gson/typeadapters/PostConstructAdapterFactory.java"}, {"item_id": "R2-009", "path": "gson/src/main/java/com/google/gson/FieldAttributes.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/gson/src/main/java/com/google/gson/FieldAttributes.java"}, {"item_id": "R2-001", "path": "extras/src/main/java/com/google/gson/graph/GraphAdapterBuilder.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/extras/src/main/java/com/google/gson/graph/GraphAdapterBuilder.java"}, {"item_id": "R2-006", "path": "extras/src/main/java/com/google/gson/typeadapters/RuntimeTypeAdapterFactory.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/extras/src/main/java/com/google/gson/typeadapters/RuntimeTypeAdapterFactory.java"}, {"item_id": "R2-002", "path": "extras/src/main/java/com/google/gson/interceptors/Intercept.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/extras/src/main/java/com/google/gson/interceptors/Intercept.java"}, {"item_id": "R2-010", "path": "gson/src/main/java/com/google/gson/FieldNamingPolicy.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/gson/src/main/java/com/google/gson/FieldNamingPolicy.java"}, {"item_id": "R2-003", "path": "extras/src/main/java/com/google/gson/interceptors/InterceptorFactory.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/extras/src/main/java/com/google/gson/interceptors/InterceptorFactory.java"}, {"item_id": "R2-004", "path": "extras/src/main/java/com/google/gson/interceptors/JsonPostDeserializer.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/extras/src/main/java/com/google/gson/interceptors/JsonPostDeserializer.java"}, {"item_id": "R2-012", "path": "gson/src/main/java/com/google/gson/Gson.java", "link": "https://github.com/google/gson/blob/b72dbc40f0fd8aac3c40eebceffb4b6af7474b83/gson/src/main/java/com/google/gson/Gson.java"}];
+for(let i=ITEMS.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ITEMS[i],ITEMS[j]]=[ITEMS[j],ITEMS[i]];}
+const tb=document.getElementById("tb");
+ITEMS.forEach((it,k)=>{const tr=document.createElement("tr");
+ const f=it.link?`<a href="${it.link}" target="_blank" rel="noopener">${it.path}</a>`:it.path;
+ tr.innerHTML=`<td>${k+1}</td><td>${f}</td><td><input type="number" min="1" max="${ITEMS.length}" data-id="${it.item_id}"></td>`;tb.appendChild(tr);});
+document.getElementById("btn").onclick=()=>{
+ const msg=document.getElementById("msg");msg.textContent="";
+ const ev=document.getElementById("ev").value.trim();if(!ev){msg.textContent="Ingrese su código de evaluador.";return;}
+ const inp=[...document.querySelectorAll("input[data-id]")];const v=inp.map(x=>parseInt(x.value));
+ if(v.some(isNaN)){msg.textContent="Falta asignar un rango a algún elemento.";return;}
+ const s=[...v].sort((a,b)=>a-b);if(s.some((x,i)=>x!==i+1)){msg.textContent=`Use cada número de 1 a ${ITEMS.length} exactamente una vez.`;return;}
+ let csv="evaluador,bloque,item_id,rank\n";inp.forEach((x,i)=>{csv+=`${ev},${BLOQUE},${x.dataset.id},${v[i]}\n`;});
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download=`ranking_${BLOQUE}_${ev}.csv`;a.click();};
+</script></body></html>
