@@ -1,0 +1,19 @@
+{
+  "t0": "2025-04-20",
+  "t1": "2026-04-20",
+  "ventana_historial_meses": 12,
+  "items_por_repo": 12,
+  "bloque_tamano": 12,
+  "n_evaluadores": 10,
+  "evaluadores_por_bloque": 6,
+  "semilla": 42,
+  "extensiones": [".java", ".ts", ".tsx"],
+  "excluir_rutas": ["/test/", "/tests/", "node_modules", "/dist/", "/build/", ".spec.", ".test.", "/generated/"],
+  "regex_defectos": "(^|[^a-z])(fix|fixes|fixed|bug|defect)([^a-z]|$)",
+  "regex_issue_ref": "#[0-9]+",
+  "sonar": {"url": "http://localhost:9000", "token_env": "squ_92e03d5983f0785f7d0056005a9a835efd887aa2"},
+  "repos": [
+    {"nombre": "R1", "url": "https://github.com/Jose-alejandro05/tdps-estudio", "sonar_key": "R1"},
+    {"nombre": "R2", "url": "https://github.com/Jose-alejandro05/tdps-estudio.git", "sonar_key": "R2"}
+  ]
+}

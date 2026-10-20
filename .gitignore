@@ -1,0 +1,6 @@
+repos/*
+!repos/.gitkeep
+resultados/*
+!resultados/.gitkeep
+__pycache__/
+*.pyc

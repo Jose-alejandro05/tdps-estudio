@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ranking de deuda técnica — __BLOQUE__</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:860px;margin:2rem auto;padding:0 1rem;line-height:1.5}
+table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:.5rem;text-align:left}
+input[type=number]{width:4.5rem}.err{color:#b00020;font-weight:600}.box{background:#f4f4f4;padding:1rem;border-radius:6px}
+</style></head><body>
+<h1>Ranking de deuda técnica — bloque __BLOQUE__ (repositorio __REPO__)</h1>
+<div class="box">
+<p><b>Tarea.</b> Ordene los siguientes elementos de deuda técnica (archivos) según <b>qué tan prioritario es atenderlos en los próximos sprints</b>.
+Considere en conjunto: riesgo de fallas, costo de postergar, valor de negocio del módulo y esfuerzo de corregir.</p>
+<p>Asigne <b>1</b> al más prioritario y <b>N</b> al menos prioritario. No repita números. Puede abrir el archivo (enlace) para revisarlo.
+<b>No consulte</b> reportes de SonarQube ni ningún puntaje calculado; y no comente sus respuestas con otros evaluadores.</p></div>
+<p><label>Su código de evaluador (ej. X01): <input id="ev" size="8"></label></p>
+<table><thead><tr><th>Elemento</th><th>Archivo</th><th>Rango</th></tr></thead><tbody id="tb"></tbody></table>
+<p><button id="btn">Descargar respuestas (CSV)</button> <span id="msg" class="err"></span></p>
+<script>
+const BLOQUE="__BLOQUE__", ITEMS=__ITEMS__;
+for(let i=ITEMS.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ITEMS[i],ITEMS[j]]=[ITEMS[j],ITEMS[i]];}
+const tb=document.getElementById("tb");
+ITEMS.forEach((it,k)=>{const tr=document.createElement("tr");
+ const f=it.link?`<a href="${it.link}" target="_blank" rel="noopener">${it.path}</a>`:it.path;
+ tr.innerHTML=`<td>${k+1}</td><td>${f}</td><td><input type="number" min="1" max="${ITEMS.length}" data-id="${it.item_id}"></td>`;tb.appendChild(tr);});
+document.getElementById("btn").onclick=()=>{
+ const msg=document.getElementById("msg");msg.textContent="";
+ const ev=document.getElementById("ev").value.trim();if(!ev){msg.textContent="Ingrese su código de evaluador.";return;}
+ const inp=[...document.querySelectorAll("input[data-id]")];const v=inp.map(x=>parseInt(x.value));
+ if(v.some(isNaN)){msg.textContent="Falta asignar un rango a algún elemento.";return;}
+ const s=[...v].sort((a,b)=>a-b);if(s.some((x,i)=>x!==i+1)){msg.textContent=`Use cada número de 1 a ${ITEMS.length} exactamente una vez.`;return;}
+ let csv="evaluador,bloque,item_id,rank\n";inp.forEach((x,i)=>{csv+=`${ev},${BLOQUE},${x.dataset.id},${v[i]}\n`;});
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download=`ranking_${BLOQUE}_${ev}.csv`;a.click();};
+</script></body></html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparaciones pareadas (AHP) — priorización de deuda técnica</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:900px;margin:2rem auto;padding:0 1rem;line-height:1.5}
+.box{background:#f4f4f4;padding:1rem;border-radius:6px}table{border-collapse:collapse;width:100%}
+td,th{border:1px solid #ccc;padding:.5rem;text-align:left}.err{color:#b00020;font-weight:600}select{max-width:100%}
+</style></head><body>
+<h1>Comparaciones pareadas de criterios (AHP)</h1>
+<div class="box"><p>Al decidir <b>qué deuda técnica atender primero en el Product Backlog de un equipo Scrum</b>, compare la
+<b>importancia</b> de cada par de criterios. Responda según su experiencia profesional.</p>
+<ul>
+<li><b>Interés (I):</b> costo recurrente de no remediar (cambios frecuentes, churn, issues asociados).</li>
+<li><b>Riesgo (R):</b> probabilidad e impacto de fallas (complejidad, acoplamiento, baja cobertura de pruebas).</li>
+<li><b>Valor de negocio (V):</b> relación con funcionalidades que el Product Owner prioriza.</li>
+<li><b>Principal (P):</b> costo de remediar hoy, en horas.</li>
+<li><b>Esfuerzo (E):</b> tamaño relativo de la remediación, en story points.</li></ul>
+<p>Escala: 1 = igual importancia · 3 = moderadamente más · 5 = fuertemente más · 7 = muy fuertemente más · 9 = extremadamente más (2, 4, 6, 8 son valores intermedios).</p></div>
+<p><label>Su código de experto (ej. E01): <input id="ex" size="8"></label></p>
+<table><thead><tr><th>Comparación</th><th>Respuesta</th></tr></thead><tbody id="tb"></tbody></table>
+<p><button id="btn">Descargar respuestas (CSV)</button> <span id="msg" class="err"></span></p>
+<script>
+const C=[["I","Interés"],["R","Riesgo"],["V","Valor de negocio"],["P","Principal"],["E","Esfuerzo"]];
+const tb=document.getElementById("tb");const pares=[];
+for(let a=0;a<5;a++)for(let b=a+1;b<5;b++){pares.push([a,b]);
+ const tr=document.createElement("tr");let o='<option value="">— elija —</option>';
+ for(let k=9;k>=2;k--)o+=`<option value="L${k}">${C[a][1]} es más importante (${k})</option>`;
+ o+='<option value="1">Igual importancia (1)</option>';
+ for(let k=2;k<=9;k++)o+=`<option value="R${k}">${C[b][1]} es más importante (${k})</option>`;
+ tr.innerHTML=`<td><b>${C[a][1]}</b> frente a <b>${C[b][1]}</b></td><td><select>${o}</select></td>`;tb.appendChild(tr);}
+document.getElementById("btn").onclick=()=>{
+ const msg=document.getElementById("msg");msg.textContent="";
+ const ex=document.getElementById("ex").value.trim();if(!ex){msg.textContent="Ingrese su código de experto.";return;}
+ const sel=[...document.querySelectorAll("select")];if(sel.some(s=>!s.value)){msg.textContent="Responda las 10 comparaciones.";return;}
+ let csv="experto,i,j,valor\n";
+ sel.forEach((s,n)=>{const v=s.value;let val=1;if(v[0]==="L")val=parseInt(v.slice(1));else if(v[0]==="R")val=1/parseInt(v.slice(1));
+  csv+=`${ex},${C[pares[n][0]][0]},${C[pares[n][1]][0]},${val.toPrecision(8)}\n`;});
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download=`ahp_${ex}.csv`;a.click();};
+</script></body></html>
